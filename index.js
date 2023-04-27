@@ -10,7 +10,11 @@ app.use(express.urlencoded({extended:true}));
 // GET /birds
 app.get('/birds', async (req, res, next) => {
   try {
-    const birds = await Bird.findAll();
+    const { limit = 10, page = 1 } = req.query;
+    const birds = await Bird.findAll({
+        limit,
+        offset: limit * (page - 1)
+    });
     res.send(birds);
   } catch (error) {
     console.error(error);
